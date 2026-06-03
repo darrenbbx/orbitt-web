@@ -68,12 +68,20 @@
 
   #site { display: none; }
 
+  .inner {
+    max-width: 960px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
   header {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(10,0,204,0.92);
+    background: rgba(2,0,128,0.92);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--white-10);
     padding: 14px 32px;
+  }
+  header .inner {
     display: flex; align-items: center; justify-content: space-between;
   }
   .logo { font-family: 'Space Mono', monospace; font-size: 16px; letter-spacing: 4px; }
@@ -111,6 +119,8 @@
     padding: 0 32px;
     display: flex; align-items: center; gap: 16px;
     margin-top: 16px; margin-bottom: 24px;
+    max-width: 960px;
+    margin-left: auto; margin-right: auto;
   }
   .avatar {
     width: 56px; height: 56px; border-radius: 50%;
@@ -121,7 +131,7 @@
   .profile-name { font-size: 16px; font-weight: 500; padding-bottom: 4px; }
   .profile-sub { font-size: 12px; color: var(--white-40); font-family: 'Space Mono', monospace; letter-spacing: 1px; }
 
-  .layout { display: flex; gap: 24px; padding: 0 32px 60px; align-items: flex-start; }
+  .layout { display: flex; gap: 24px; padding: 0 32px 60px; align-items: flex-start; max-width: 960px; margin: 0 auto; }
   .feed { flex: 1; min-width: 0; }
   .sidebar { width: 220px; flex-shrink: 0; position: sticky; top: 80px; }
 
@@ -134,13 +144,21 @@
   }
   .filter-btn:hover, .filter-btn.active { background: white; color: var(--blue); border-color: white; }
 
+  /* ── post card（クリック可能なカード） ── */
   .post-card {
     background: rgba(255,255,255,0.05);
     border: 1px solid var(--white-10);
     border-radius: 14px; padding: 20px; margin-bottom: 16px;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    cursor: pointer;
+    user-select: none;
   }
-  .post-card:hover { border-color: var(--white-20); }
+  .post-card:hover {
+    border-color: var(--white-40);
+    background: rgba(255,255,255,0.08);
+    transform: translateY(-2px);
+  }
+  .post-card:active { transform: translateY(0); }
   .post-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
   .post-av {
     width: 32px; height: 32px; border-radius: 50%;
@@ -157,22 +175,39 @@
     padding: 3px 10px; border-radius: 20px; letter-spacing: 1px;
   }
   .post-title { font-size: 15px; font-weight: 500; margin-bottom: 8px; line-height: 1.4; }
-  .post-body { font-size: 13px; color: var(--white-60); line-height: 1.7; margin-bottom: 14px; white-space: pre-line; }
-  .video-link {
-    display: flex; align-items: center; gap: 10px;
-    background: rgba(0,0,0,0.2); border: 1px solid var(--white-10);
-    border-radius: 10px; padding: 12px 16px;
-    color: white; text-decoration: none; font-size: 13px; margin-bottom: 14px;
-    transition: background 0.2s;
+
+  /* プレビュー本文（短く切り詰める） */
+  .post-preview {
+    font-size: 13px; color: var(--white-40); line-height: 1.6;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
-  .video-link:hover { background: rgba(0,0,0,0.35); }
-  .play-icon {
-    width: 32px; height: 32px; background: white; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+
+  /* 動画バッジ（カード上） */
+  .video-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-family: 'Space Mono', monospace;
+    color: var(--white-60);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--white-20);
+    border-radius: 20px; padding: 4px 12px;
+    margin-bottom: 12px;
   }
+  .play-dot {
+    width: 6px; height: 6px; background: #ff3366; border-radius: 50%;
+  }
+
   .post-footer {
-    padding-top: 14px; border-top: 1px solid var(--white-10);
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 12px; border-top: 1px solid var(--white-10);
     font-size: 11px; color: var(--white-40); font-family: 'Space Mono', monospace;
+  }
+  .read-more {
+    font-size: 11px; color: var(--white-60);
+    font-family: 'Space Mono', monospace; letter-spacing: 1px;
   }
 
   .sb-card {
@@ -207,9 +242,87 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── 掲示板 ────────────────── */
+  /* ── モーダル ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(1,0,60,0.85);
+    backdrop-filter: blur(16px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .modal-overlay.open {
+    opacity: 1; pointer-events: all;
+  }
+  .modal {
+    background: #06048a;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 20px;
+    width: 100%; max-width: 640px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 32px;
+    transform: translateY(24px);
+    transition: transform 0.25s;
+    position: relative;
+  }
+  .modal-overlay.open .modal {
+    transform: translateY(0);
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--white-10); border: none;
+    color: white; font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .modal-close:hover { background: var(--white-20); }
+  .modal-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .modal-av {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #2200ff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace; font-size: 13px; flex-shrink: 0;
+  }
+  .modal-name { font-size: 13px; font-weight: 500; }
+  .modal-date { font-size: 11px; color: var(--white-40); font-family: 'Space Mono', monospace; }
+  .modal-type {
+    margin-left: auto; font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    background: var(--white-10); color: var(--white-60);
+    padding: 3px 10px; border-radius: 20px; letter-spacing: 1px;
+  }
+  .modal-title { font-size: 20px; font-weight: 500; line-height: 1.4; margin-bottom: 16px; }
+  .modal-divider { height: 1px; background: var(--white-10); margin-bottom: 16px; }
+  .modal-body { font-size: 14px; color: var(--white-60); line-height: 1.8; white-space: pre-line; margin-bottom: 20px; }
+  .modal-video-link {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(0,0,0,0.25); border: 1px solid var(--white-20);
+    border-radius: 12px; padding: 14px 18px;
+    color: white; text-decoration: none; font-size: 13px;
+    transition: background 0.2s; margin-bottom: 20px;
+  }
+  .modal-video-link:hover { background: rgba(0,0,0,0.4); }
+  .modal-play-icon {
+    width: 36px; height: 36px; background: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .modal-notion-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    border: 1px solid var(--white-20); border-radius: 10px;
+    padding: 10px 20px; font-size: 12px;
+    font-family: 'Space Mono', monospace; color: var(--white-60);
+    text-decoration: none; transition: all 0.2s; margin-top: 8px;
+  }
+  .modal-notion-btn:hover { border-color: white; color: white; }
+
+  /* ── 掲示板 ── */
   .board-section {
     padding: 0 32px 60px;
+    max-width: 960px;
+    margin: 0 auto;
   }
   .board-title {
     font-family: 'Space Mono', monospace;
@@ -273,6 +386,8 @@
     header { padding: 14px 16px; }
     .profile-row { padding: 0 16px; }
     .board-section { padding: 0 16px 40px; }
+    .modal { padding: 24px 20px; }
+    .modal-title { font-size: 17px; }
   }
 </style>
 </head>
@@ -290,8 +405,10 @@
 
 <div id="site">
   <header>
-    <div class="logo">ORBITT</div>
-    <div class="member-badge">MEMBER</div>
+    <div class="inner">
+      <div class="logo">ORBITT</div>
+      <div class="member-badge">MEMBER</div>
+    </div>
   </header>
 
   <div class="banner">
@@ -342,12 +459,18 @@
     </div>
     <div id="board-posts"></div>
   </div>
+</div>
 
+<!-- ── 投稿詳細モーダル ── -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-content"></div>
+  </div>
 </div>
 
 <script>
-  const PASSWORD = 'orbitt2026'; // ← パスワードをここで変更
-
+  const PASSWORD = 'orbitt2026';
   let allPosts = [];
 
   function tryLogin() {
@@ -379,26 +502,40 @@
     }
   }
 
+  function getPostData(post) {
+    const props = post.properties;
+    const title = props.Name?.title?.[0]?.plain_text || props.Title?.title?.[0]?.plain_text || '(無題)';
+    const type = props.Type?.select?.name || props.種類?.select?.name || '';
+    const body = props.Text?.rich_text?.[0]?.plain_text || props.Body?.rich_text?.[0]?.plain_text || props.内容?.rich_text?.[0]?.plain_text || '';
+    const videoUrl = props.VideoURL?.url || props.URL?.url || '';
+    const notionUrl = post.url || '';
+    const dateStr = props.Date?.date?.start || props.日付?.date?.start || '';
+    const postDate = dateStr ? new Date(dateStr) : new Date(post.created_time);
+    const now = new Date();
+    const isNew = (now - postDate) / (1000*60*60*24) <= 3;
+    const dateLabel = postDate.toLocaleDateString('ja-JP', { year:'numeric', month:'2-digit', day:'2-digit' }).replace(/\//g,'.');
+    return { title, type, body, videoUrl, notionUrl, dateLabel, isNew };
+  }
+
   function renderPosts(posts) {
     const container = document.getElementById('posts-container');
     if (posts.length === 0) {
       container.innerHTML = '<div class="loading">投稿がまだありません</div>';
       return;
     }
-    const now = new Date();
-    container.innerHTML = posts.map(post => {
-      const props = post.properties;
-      const title = props.Name?.title?.[0]?.plain_text || props.Title?.title?.[0]?.plain_text || '(無題)';
-      const type = props.Type?.select?.name || props.種類?.select?.name || '';
-      const body = props.Text?.rich_text?.[0]?.plain_text || props.Body?.rich_text?.[0]?.plain_text || props.内容?.rich_text?.[0]?.plain_text || '';
-      const videoUrl = props.VideoURL?.url || props.URL?.url || '';
-      const dateStr = props.Date?.date?.start || props.日付?.date?.start || '';
-      const postDate = dateStr ? new Date(dateStr) : new Date(post.created_time);
-      const isNew = (now - postDate) / (1000*60*60*24) <= 3;
-      const dateLabel = postDate.toLocaleDateString('ja-JP', { year:'numeric', month:'2-digit', day:'2-digit' }).replace(/\//g,'.');
+    container.innerHTML = posts.map((post, idx) => {
+      const { title, type, body, videoUrl, dateLabel, isNew } = getPostData(post);
+
+      const videoBadge = videoUrl
+        ? `<div class="video-badge"><div class="play-dot"></div>動画あり</div>`
+        : '';
+
+      const previewText = body
+        ? `<div class="post-preview">${escHtml(body)}</div>`
+        : '';
 
       return `
-        <div class="post-card" data-type="${type}">
+        <div class="post-card" data-type="${type}" onclick="openModal(${idx})">
           <div class="post-meta">
             <div class="post-av">R</div>
             <div>
@@ -407,21 +544,75 @@
             </div>
             ${type ? `<div class="post-type">${type}</div>` : ''}
           </div>
-          <div class="post-title">${title}</div>
-          ${body ? `<div class="post-body">${body}</div>` : ''}
-          ${videoUrl ? `
-            <a href="${videoUrl}" target="_blank" class="video-link">
-              <div class="play-icon">
-                <svg width="12" height="14" viewBox="0 0 12 14" fill="none">
-                  <path d="M1 1L11 7L1 13V1Z" fill="#0a00cc"/>
-                </svg>
-              </div>
-              <span>動画を見る</span>
-            </a>` : ''}
-          <div class="post-footer">${dateLabel}</div>
+          <div class="post-title">${escHtml(title)}</div>
+          ${videoBadge}
+          ${previewText}
+          <div class="post-footer">
+            <span>${dateLabel}</span>
+            <span class="read-more">続きを読む →</span>
+          </div>
         </div>`;
     }).join('');
   }
+
+  // ── モーダル ──
+  let currentPostIdx = -1;
+
+  function openModal(idx) {
+    currentPostIdx = idx;
+    const post = allPosts[idx];
+    if (!post) return;
+
+    const { title, type, body, videoUrl, notionUrl, dateLabel, isNew } = getPostData(post);
+
+    const videoSection = videoUrl ? `
+      <a href="${videoUrl}" target="_blank" class="modal-video-link">
+        <div class="modal-play-icon">
+          <svg width="13" height="15" viewBox="0 0 12 14" fill="none">
+            <path d="M1 1L11 7L1 13V1Z" fill="#0a00cc"/>
+          </svg>
+        </div>
+        <span>動画を見る</span>
+      </a>` : '';
+
+    const notionSection = notionUrl ? `
+      <a href="${notionUrl}" target="_blank" class="modal-notion-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.19v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.284V9.197l-1.215-.14c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z"/></svg>
+        Notion で全文を見る
+      </a>` : '';
+
+    document.getElementById('modal-content').innerHTML = `
+      <div class="modal-meta">
+        <div class="modal-av">R</div>
+        <div>
+          <div class="modal-name">Riku ${isNew ? '<span style="font-size:10px;color:#ff3366;font-family:Space Mono,monospace;margin-left:6px">NEW</span>' : ''}</div>
+          <div class="modal-date">${dateLabel}</div>
+        </div>
+        ${type ? `<div class="modal-type">${type}</div>` : ''}
+      </div>
+      <div class="modal-title">${escHtml(title)}</div>
+      <div class="modal-divider"></div>
+      ${body ? `<div class="modal-body">${escHtml(body)}</div>` : ''}
+      ${videoSection}
+      ${notionSection}
+    `;
+
+    document.getElementById('modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeModalOutside(e) {
+    if (e.target === document.getElementById('modal-overlay')) closeModal();
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
 
   function filterPosts(type, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -433,13 +624,12 @@
     renderPosts(filtered);
   }
 
-  // ── 掲示板 ──────────────────────────────────────
+  // ── 掲示板 ──
   const BOARD_KEY = 'orbitt_board_v1';
 
   function loadBoard() {
-    try {
-      return JSON.parse(localStorage.getItem(BOARD_KEY) || '[]');
-    } catch { return []; }
+    try { return JSON.parse(localStorage.getItem(BOARD_KEY) || '[]'); }
+    catch { return []; }
   }
   function saveBoard(posts) {
     localStorage.setItem(BOARD_KEY, JSON.stringify(posts));
@@ -467,7 +657,7 @@
   }
 
   function escHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
   function submitBoard() {
@@ -484,7 +674,6 @@
     renderBoard();
   }
 
-  // ページ読み込み時に掲示板表示（ログイン前でも初期化だけ）
   renderBoard();
 </script>
 </body>
