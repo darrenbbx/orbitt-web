@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORBITT — Members</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #0a00cc;
+    --white-10: rgba(255,255,255,0.1);
+    --white-20: rgba(255,255,255,0.2);
+    --white-40: rgba(255,255,255,0.4);
+    --white-60: rgba(255,255,255,0.6);
+    --accent: #ff3366;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100vh; background: var(--blue); color: white; font-family: 'Noto Sans JP', sans-serif; }
+
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .login-logo { font-family: 'Space Mono', monospace; font-size: 32px; letter-spacing: 6px; }
+  .login-box {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--white-10);
+    border-radius: 16px;
+    padding: 32px;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .login-box p { font-size: 13px; color: var(--white-60); text-align: center; }
+  .login-box input {
+    width: 100%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--white-20);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: white;
+    font-size: 14px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 2px;
+    outline: none;
+  }
+  .login-box input:focus { border-color: var(--white-40); }
+  .login-box button {
+    width: 100%;
+    background: white;
+    color: var(--blue);
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+  }
+  .login-box button:hover { background: #eee; }
+  .login-err { font-size: 12px; color: var(--accent); text-align: center; display: none; }
+
+  #site { display: none; }
+
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,0,204,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--white-10);
+    padding: 14px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { font-family: 'Space Mono', monospace; font-size: 16px; letter-spacing: 4px; }
+  .member-badge {
+    font-size: 11px;
+    background: var(--white-10);
+    border: 1px solid var(--white-20);
+    padding: 4px 12px;
+    border-radius: 20px;
+    color: var(--white-60);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .banner {
+    width: 100%; height: 200px;
+    background: linear-gradient(135deg, #0500aa 0%, #1a00ee 60%, #2200aa 100%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .banner::before {
+    content: 'ORBITT';
+    font-family: 'Space Mono', monospace;
+    font-size: 80px;
+    color: rgba(255,255,255,0.04);
+    letter-spacing: 20px;
+    position: absolute;
+  }
+  .banner-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; letter-spacing: 4px;
+    color: var(--white-40); position: relative;
+  }
+
+  .profile-row {
+    padding: 0 32px;
+    display: flex; align-items: flex-end; gap: 16px;
+    margin-top: -28px; margin-bottom: 32px;
+  }
+  .avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #2200ff; border: 3px solid var(--blue);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace; font-size: 18px;
+  }
+  .profile-name { font-size: 16px; font-weight: 500; padding-bottom: 4px; }
+  .profile-sub { font-size: 12px; color: var(--white-40); font-family: 'Space Mono', monospace; letter-spacing: 1px; }
+
+  .layout { display: flex; gap: 24px; padding: 0 32px 60px; align-items: flex-start; }
+  .feed { flex: 1; min-width: 0; }
+  .sidebar { width: 220px; flex-shrink: 0; position: sticky; top: 80px; }
+
+  .filters { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .filter-btn {
+    font-size: 12px; padding: 6px 16px; border-radius: 20px;
+    border: 1px solid var(--white-20); background: transparent;
+    color: var(--white-60); cursor: pointer;
+    font-family: 'Space Mono', monospace; transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active { background: white; color: var(--blue); border-color: white; }
+
+  .post-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--white-10);
+    border-radius: 14px; padding: 20px; margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+  .post-card:hover { border-color: var(--white-20); }
+  .post-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .post-av {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #2200ff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace; font-size: 12px; flex-shrink: 0;
+  }
+  .post-name { font-size: 13px; font-weight: 500; }
+  .post-date { font-size: 11px; color: var(--white-40); font-family: 'Space Mono', monospace; }
+  .post-type {
+    margin-left: auto; font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    background: var(--white-10); color: var(--white-60);
+    padding: 3px 10px; border-radius: 20px; letter-spacing: 1px;
+  }
+  .post-title { font-size: 15px; font-weight: 500; margin-bottom: 8px; line-height: 1.4; }
+  .post-body { font-size: 13px; color: var(--white-60); line-height: 1.7; margin-bottom: 14px; white-space: pre-line; }
+  .video-link {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(0,0,0,0.2); border: 1px solid var(--white-10);
+    border-radius: 10px; padding: 12px 16px;
+    color: white; text-decoration: none; font-size: 13px; margin-bottom: 14px;
+    transition: background 0.2s;
+  }
+  .video-link:hover { background: rgba(0,0,0,0.35); }
+  .play-icon {
+    width: 32px; height: 32px; background: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .post-footer {
+    padding-top: 14px; border-top: 1px solid var(--white-10);
+    font-size: 11px; color: var(--white-40); font-family: 'Space Mono', monospace;
+  }
+
+  .sb-card {
+    background: rgba(255,255,255,0.05); border: 1px solid var(--white-10);
+    border-radius: 12px; padding: 16px; margin-bottom: 14px;
+  }
+  .sb-label {
+    font-size: 10px; font-family: 'Space Mono', monospace;
+    letter-spacing: 2px; color: var(--white-40); margin-bottom: 12px; text-transform: uppercase;
+  }
+  .sb-plan { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+  .plan-dot { width: 8px; height: 8px; background: #44ff88; border-radius: 50%; }
+  .sb-stat { font-size: 28px; font-family: 'Space Mono', monospace; font-weight: 700; }
+  .sb-stat-sub { font-size: 11px; color: var(--white-40); margin-top: 4px; font-family: 'Space Mono', monospace; }
+  .notion-link {
+    font-size: 11px; color: var(--white-40); text-align: center;
+    display: block; margin-top: 8px; font-family: 'Space Mono', monospace;
+    text-decoration: none;
+  }
+  .notion-link:hover { color: white; }
+
+  .loading {
+    text-align: center; padding: 60px 20px;
+    color: var(--white-40); font-family: 'Space Mono', monospace;
+    font-size: 13px; letter-spacing: 2px;
+  }
+  .spinner {
+    width: 24px; height: 24px;
+    border: 2px solid var(--white-10); border-top-color: white;
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 680px) {
+    .layout { flex-direction: column; padding: 0 16px 40px; }
+    .sidebar { width: 100%; position: static; }
+    header { padding: 14px 16px; }
+    .profile-row { padding: 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-logo">ORBITT</div>
+  <div class="login-box">
+    <p>メンバー限定ページ</p>
+    <input type="password" id="pw-input" placeholder="パスワードを入力" />
+    <div class="login-err" id="login-err">パスワードが違います</div>
+    <button onclick="tryLogin()">入る</button>
+  </div>
+</div>
+
+<div id="site">
+  <header>
+    <div class="logo">ORBITT</div>
+    <div class="member-badge">MEMBER</div>
+  </header>
+
+  <div class="banner">
+    <div class="banner-text">EXCLUSIVE MEMBERS CONTENT</div>
+  </div>
+
+  <div class="profile-row">
+    <div class="avatar">R</div>
+    <div>
+      <div class="profile-name">Riku Matsushima</div>
+      <div class="profile-sub">限定コンテンツ</div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="feed">
+      <div class="filters">
+        <button class="filter-btn active" onclick="filterPosts('all', this)">All</button>
+        <button class="filter-btn" onclick="filterPosts('動画', this)">動画</button>
+        <button class="filter-btn" onclick="filterPosts('テキスト', this)">テキスト</button>
+        <button class="filter-btn" onclick="filterPosts('写真', this)">写真</button>
+      </div>
+      <div id="posts-container">
+        <div class="loading"><div class="spinner"></div>LOADING...</div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="sb-card">
+        <div class="sb-label">プラン</div>
+        <div class="sb-plan"><div class="plan-dot"></div><span>Premium</span></div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-label">投稿数</div>
+        <div class="sb-stat" id="post-count">—</div>
+        <div class="sb-stat-sub">件のコンテンツ</div>
+        <a href="https://notion.so" target="_blank" class="notion-link">▸ Notion で管理</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const PASSWORD = 'orbitt2026'; // ← パスワードをここで変更
+
+  let allPosts = [];
+
+  function tryLogin() {
+    const val = document.getElementById('pw-input').value;
+    if (val === PASSWORD) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('site').style.display = 'block';
+      loadPosts();
+    } else {
+      document.getElementById('login-err').style.display = 'block';
+    }
+  }
+
+  document.getElementById('pw-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') tryLogin();
+  });
+
+  async function loadPosts() {
+    try {
+      const res = await fetch('/.netlify/functions/notion');
+      if (!res.ok) throw new Error('API error');
+      const data = await res.json();
+      allPosts = data.results || [];
+      document.getElementById('post-count').textContent = allPosts.length;
+      renderPosts(allPosts);
+    } catch (e) {
+      document.getElementById('posts-container').innerHTML =
+        `<div class="loading">⚠ 読み込みエラー<br><br><small>${e.message}</small></div>`;
+    }
+  }
+
+  function renderPosts(posts) {
+    const container = document.getElementById('posts-container');
+    if (posts.length === 0) {
+      container.innerHTML = '<div class="loading">投稿がまだありません</div>';
+      return;
+    }
+    const now = new Date();
+    container.innerHTML = posts.map(post => {
+      const props = post.properties;
+      const title = props.Name?.title?.[0]?.plain_text || props.Title?.title?.[0]?.plain_text || '(無題)';
+      const type = props.Type?.select?.name || props.種類?.select?.name || '';
+      const body = props.Text?.rich_text?.[0]?.plain_text || props.Body?.rich_text?.[0]?.plain_text || props.内容?.rich_text?.[0]?.plain_text || '';
+      const videoUrl = props.VideoURL?.url || props.URL?.url || '';
+      const dateStr = props.Date?.date?.start || props.日付?.date?.start || '';
+      const postDate = dateStr ? new Date(dateStr) : new Date(post.created_time);
+      const isNew = (now - postDate) / (1000*60*60*24) <= 3;
+      const dateLabel = postDate.toLocaleDateString('ja-JP', { year:'numeric', month:'2-digit', day:'2-digit' }).replace(/\//g,'.');
+
+      return `
+        <div class="post-card" data-type="${type}">
+          <div class="post-meta">
+            <div class="post-av">R</div>
+            <div>
+              <div class="post-name">Riku ${isNew ? '<span style="font-size:10px;color:#ff3366;font-family:Space Mono,monospace;margin-left:6px">NEW</span>' : ''}</div>
+              <div class="post-date">${dateLabel}</div>
+            </div>
+            ${type ? `<div class="post-type">${type}</div>` : ''}
+          </div>
+          <div class="post-title">${title}</div>
+          ${body ? `<div class="post-body">${body}</div>` : ''}
+          ${videoUrl ? `
+            <a href="${videoUrl}" target="_blank" class="video-link">
+              <div class="play-icon">
+                <svg width="12" height="14" viewBox="0 0 12 14" fill="none">
+                  <path d="M1 1L11 7L1 13V1Z" fill="#0a00cc"/>
+                </svg>
+              </div>
+              <span>動画を見る</span>
+            </a>` : ''}
+          <div class="post-footer">${dateLabel}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function filterPosts(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filtered = type === 'all' ? allPosts : allPosts.filter(p => {
+      const t = p.properties.Type?.select?.name || p.properties.種類?.select?.name || '';
+      return t === type;
+    });
+    renderPosts(filtered);
+  }
+</script>
+</body>
+</html>
