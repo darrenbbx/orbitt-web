@@ -369,7 +369,7 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
 <!-- ── Firebase SDK ── -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getFirestore, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp, getCountFromServer } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, getCountFromServer } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBW0fUMMA1k6lQ2gfadFTUZ6dfgf4bZ8bM",
@@ -390,7 +390,6 @@ window._collection = collection;
 window._addDoc = addDoc;
 window._query = query;
 window._where = where;
-window._orderBy = orderBy;
 window._onSnapshot = onSnapshot;
 window._serverTimestamp = serverTimestamp;
 window._getCountFromServer = getCountFromServer;
@@ -624,8 +623,7 @@ function loadComments(postId) {
   const db = window._db;
   const q = window._query(
     window._collection(db, 'comments'),
-    window._where('postId', '==', postId),
-    window._orderBy('createdAt', 'asc')
+    window._where('postId', '==', postId)
   );
 
   unsubscribeComments = window._onSnapshot(q, (snapshot) => {
@@ -637,7 +635,14 @@ function loadComments(postId) {
       return;
     }
 
-    list.innerHTML = snapshot.docs.map(doc => {
+    // クライアント側で時系列順にソート
+    const docs = snapshot.docs.slice().sort((a, b) => {
+      const ta = a.data().createdAt?.toMillis?.() || 0;
+      const tb = b.data().createdAt?.toMillis?.() || 0;
+      return ta - tb;
+    });
+
+    list.innerHTML = docs.map(doc => {
       const d = doc.data();
       const name = d.name || '匿名';
       const initials = name.slice(0, 2).toUpperCase();
