@@ -4,16 +4,11 @@ export const handler = async (event) => {
   }
 
   const { password } = JSON.parse(event.body || '{}');
-  const correct = process.env.SITE_PASSWORD;
 
-  if (!correct) {
-    return { statusCode: 500, body: JSON.stringify({ error: 'Server misconfigured' }) };
-  }
-
-  if (password === correct) {
+  if (password === 'orbitt2026') {
     return {
       statusCode: 200,
-      body: JSON.stringify({ ok: true, token: correct })
+      body: JSON.stringify({ ok: true })
     };
   }
 
