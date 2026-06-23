@@ -24,8 +24,9 @@ html, body { min-height: 100vh; background: var(--blue); color: white; font-fami
 .login-box p { font-size: 13px; color: var(--white-60); text-align: center; }
 .login-box input { width: 100%; background: rgba(255,255,255,0.08); border: 1px solid var(--white-20); border-radius: 8px; padding: 12px 16px; color: white; font-size: 14px; font-family: 'Space Mono', monospace; letter-spacing: 2px; outline: none; }
 .login-box input:focus { border-color: var(--white-40); }
-.login-box button { width: 100%; background: white; color: var(--blue); border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'Space Mono', monospace; letter-spacing: 1px; }
+.login-box button { width: 100%; background: white; color: var(--blue); border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'Space Mono', monospace; letter-spacing: 1px; transition: background 0.2s; }
 .login-box button:hover { background: #eee; }
+.login-box button:disabled { opacity: 0.5; cursor: not-allowed; }
 .login-err { font-size: 12px; color: var(--accent); text-align: center; display: none; }
 
 #site { display: none; }
@@ -72,7 +73,8 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
 .video-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-family: 'Space Mono', monospace; color: var(--white-60); background: rgba(255,255,255,0.08); border: 1px solid var(--white-20); border-radius: 20px; padding: 4px 12px; margin-bottom: 12px; }
 .play-dot { width: 6px; height: 6px; background: #ff3366; border-radius: 50%; }
 .post-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--white-10); font-size: 11px; color: var(--white-40); font-family: 'Space Mono', monospace; }
-.comment-count-badge { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--white-40); font-family: 'Space Mono', monospace; }
+.comment-count-badge { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--white-40); font-family: 'Space Mono', monospace; }
+.comment-count-badge.has-comments { color: rgba(255,255,255,0.7); }
 .read-more { font-size: 11px; color: var(--white-60); font-family: 'Space Mono', monospace; letter-spacing: 1px; }
 
 /* ── サイドバー ── */
@@ -94,7 +96,7 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
 .modal-overlay { position: fixed; inset: 0; z-index: 200; background: var(--blue); display: flex; flex-direction: column; opacity: 0; pointer-events: none; transition: opacity 0.3s; overflow-y: auto; }
 .modal-overlay.open { opacity: 1; pointer-events: all; }
 .modal-topbar { position: sticky; top: 0; z-index: 10; background: rgba(2,0,128,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--white-10); padding: 12px 24px; display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
-.modal-back-btn { display: flex; align-items: center; gap: 8px; background: var(--white-10); border: 1px solid var(--white-20); border-radius: 8px; padding: 6px 14px; color: var(--white-60); font-size: 12px; cursor: pointer; font-family: 'Space Mono', monospace; letter-spacing: 1px; transition: all 0.2s; text-decoration: none; }
+.modal-back-btn { display: flex; align-items: center; gap: 8px; background: var(--white-10); border: 1px solid var(--white-20); border-radius: 8px; padding: 6px 14px; color: var(--white-60); font-size: 12px; cursor: pointer; font-family: 'Space Mono', monospace; letter-spacing: 1px; transition: all 0.2s; }
 .modal-back-btn:hover { background: var(--white-20); color: white; }
 .modal-topbar-logo { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 4px; color: var(--white-40); margin-left: auto; }
 .modal { width: 100%; max-width: 720px; margin: 0 auto; padding: 48px 32px 80px; transform: translateY(20px); transition: transform 0.3s; }
@@ -153,112 +155,32 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
 .lightbox-next { right: 20px; }
 .lightbox-counter { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 11px; color: rgba(255,255,255,0.5); font-family: 'Space Mono', monospace; letter-spacing: 2px; }
 
-/* ── コメントセクション ── */
-.comments-section {
-  margin-top: 40px;
-  border-top: 1px solid var(--white-10);
-  padding-top: 32px;
-}
-.comments-title {
-  font-family: 'Space Mono', monospace;
-  font-size: 11px; letter-spacing: 3px;
-  color: var(--white-40); text-transform: uppercase;
-  margin-bottom: 20px;
-}
-.comments-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 24px;
-  min-height: 0;
-}
-.comment-item {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--white-10);
-  border-radius: 12px;
-  padding: 14px 16px;
-  transition: border-color 0.2s;
-}
+/* ── コメント ── */
+.comments-section { margin-top: 40px; border-top: 1px solid var(--white-10); padding-top: 32px; }
+.comments-title { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 3px; color: var(--white-40); text-transform: uppercase; margin-bottom: 20px; }
+.comments-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.comment-item { background: rgba(255,255,255,0.04); border: 1px solid var(--white-10); border-radius: 12px; padding: 14px 16px; transition: border-color 0.2s; }
 .comment-item:hover { border-color: var(--white-20); }
-.comment-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-.comment-av {
-  width: 26px; height: 26px; border-radius: 50%;
-  background: rgba(255,255,255,0.15);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Space Mono', monospace; font-size: 10px; flex-shrink: 0;
-}
+.comment-item.is-new { border-color: rgba(255,255,255,0.25); animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.comment-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.comment-av { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 10px; flex-shrink: 0; }
 .comment-name { font-size: 13px; font-weight: 500; }
 .comment-ts { font-size: 11px; color: var(--white-40); font-family: 'Space Mono', monospace; margin-left: auto; }
 .comment-body { font-size: 13px; color: var(--white-60); line-height: 1.7; white-space: pre-line; }
-.comments-empty {
-  font-size: 12px; color: var(--white-40);
-  font-family: 'Space Mono', monospace;
-  padding: 16px 0;
-  letter-spacing: 1px;
-}
-.comments-loading {
-  font-size: 12px; color: var(--white-40);
-  font-family: 'Space Mono', monospace;
-  padding: 16px 0;
-  letter-spacing: 1px;
-}
-
-/* コメント投稿フォーム */
-.comment-form {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--white-10);
-  border-radius: 14px;
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.comment-form input,
-.comment-form textarea {
-  width: 100%;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid var(--white-20);
-  border-radius: 8px;
-  padding: 10px 14px;
-  color: white;
-  font-size: 13px;
-  font-family: 'Noto Sans JP', sans-serif;
-  outline: none;
-  resize: vertical;
-}
-.comment-form input::placeholder,
-.comment-form textarea::placeholder { color: var(--white-40); }
-.comment-form input:focus,
-.comment-form textarea:focus { border-color: var(--white-40); }
+.comments-empty { font-size: 12px; color: var(--white-40); font-family: 'Space Mono', monospace; padding: 16px 0; letter-spacing: 1px; }
+.comments-loading { font-size: 12px; color: var(--white-40); font-family: 'Space Mono', monospace; padding: 16px 0; letter-spacing: 1px; }
+.comment-form { background: rgba(255,255,255,0.04); border: 1px solid var(--white-10); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.comment-form input, .comment-form textarea { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid var(--white-20); border-radius: 8px; padding: 10px 14px; color: white; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; outline: none; resize: vertical; }
+.comment-form input::placeholder, .comment-form textarea::placeholder { color: var(--white-40); }
+.comment-form input:focus, .comment-form textarea:focus { border-color: var(--white-40); }
 .comment-form textarea { min-height: 72px; }
-.comment-form-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.comment-form-row { display: flex; align-items: center; gap: 10px; }
 .comment-form-row input { flex: 1; }
-.comment-submit {
-  background: white;
-  color: var(--blue);
-  border: none;
-  border-radius: 8px;
-  padding: 9px 20px;
-  font-size: 12px;
-  font-family: 'Space Mono', monospace;
-  font-weight: 700;
-  cursor: pointer;
-  letter-spacing: 1px;
-  transition: background 0.2s;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
+.comment-submit { background: white; color: var(--blue); border: none; border-radius: 8px; padding: 9px 20px; font-size: 12px; font-family: 'Space Mono', monospace; font-weight: 700; cursor: pointer; letter-spacing: 1px; transition: background 0.2s; white-space: nowrap; flex-shrink: 0; }
 .comment-submit:hover { background: #ddd; }
 .comment-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+.rate-limit-msg { font-size: 11px; color: var(--accent); font-family: 'Space Mono', monospace; display: none; margin-top: 4px; }
 
 @media (max-width: 680px) {
   .layout { flex-direction: column; padding: 0 16px 40px; }
@@ -279,7 +201,7 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
     <p>メンバー限定ページ</p>
     <input type="password" id="pw-input" placeholder="パスワードを入力" />
     <div class="login-err" id="login-err">パスワードが違います</div>
-    <button onclick="tryLogin()">入る</button>
+    <button id="login-btn" onclick="tryLogin()">入る</button>
   </div>
 </div>
 
@@ -290,11 +212,9 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
       <div class="member-badge">MEMBER</div>
     </div>
   </header>
-
   <div class="banner">
     <div class="banner-text">EXCLUSIVE MEMBERS CONTENT</div>
   </div>
-
   <div class="profile-row">
     <div class="avatar">R</div>
     <div>
@@ -302,7 +222,6 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
       <div class="profile-sub">限定コンテンツ</div>
     </div>
   </div>
-
   <div class="layout">
     <div class="feed">
       <div class="filters">
@@ -315,7 +234,6 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
         <div class="loading"><div class="spinner"></div>LOADING...</div>
       </div>
     </div>
-
     <div class="sidebar">
       <div class="sb-card">
         <div class="sb-label">プラン</div>
@@ -331,7 +249,7 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
   </div>
 </div>
 
-<!-- ── 投稿詳細モーダル ── -->
+<!-- モーダル -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal-topbar">
     <button class="modal-back-btn" onclick="closeModal()">← 戻る</button>
@@ -339,8 +257,6 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
   </div>
   <div class="modal" id="modal">
     <div id="modal-content"></div>
-
-    <!-- コメントセクション -->
     <div class="comments-section">
       <div class="comments-title">💬 コメント</div>
       <div class="comments-list" id="comments-list">
@@ -352,6 +268,7 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
           <button class="comment-submit" id="comment-submit-btn" onclick="submitComment()">送信</button>
         </div>
         <textarea id="comment-msg" placeholder="コメントを書く..." maxlength="400"></textarea>
+        <div class="rate-limit-msg" id="rate-limit-msg">少し待ってから送信してください</div>
       </div>
     </div>
   </div>
@@ -366,10 +283,10 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
   <div class="lightbox-counter" id="lightbox-counter"></div>
 </div>
 
-<!-- ── Firebase SDK ── -->
+<!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp, getCountFromServer } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBW0fUMMA1k6lQ2gfadFTUZ6dfgf4bZ8bM",
@@ -384,7 +301,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// グローバルに公開
 window._db = db;
 window._collection = collection;
 window._addDoc = addDoc;
@@ -392,31 +308,67 @@ window._query = query;
 window._where = where;
 window._onSnapshot = onSnapshot;
 window._serverTimestamp = serverTimestamp;
-window._getCountFromServer = getCountFromServer;
 window._firebaseReady = true;
 window.dispatchEvent(new Event('firebaseReady'));
 </script>
 
 <script>
-const PASSWORD = 'orbitt2026';
+// ── 状態 ──
 let allPosts = [];
 let currentPostId = null;
 let unsubscribeComments = null;
+let commentCounts = {}; // postId => count
+let lastCommentTime = 0;
+const RATE_LIMIT_MS = 30000;
 
-function tryLogin() {
+// ── ③ sessionStorageでログイン維持 ──
+function isLoggedIn() {
+  return sessionStorage.getItem('orbitt_auth') === 'ok';
+}
+
+if (isLoggedIn()) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('site').style.display = 'block';
+  loadPosts();
+}
+
+// ── ① パスワード認証（サーバーサイド） ──
+async function tryLogin() {
   const val = document.getElementById('pw-input').value;
-  if (val === PASSWORD) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('site').style.display = 'block';
-    loadPosts();
-  } else {
+  if (!val) return;
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  try {
+    const res = await fetch('/.netlify/functions/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: val })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      sessionStorage.setItem('orbitt_auth', 'ok');
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('site').style.display = 'block';
+      loadPosts();
+    } else {
+      document.getElementById('login-err').style.display = 'block';
+    }
+  } catch (e) {
     document.getElementById('login-err').style.display = 'block';
+    document.getElementById('login-err').textContent = '通信エラーが発生しました';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '入る';
   }
 }
+
 document.getElementById('pw-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') tryLogin();
 });
 
+// ── 投稿読み込み ──
 async function loadPosts() {
   try {
     const res = await fetch('/.netlify/functions/notion');
@@ -425,12 +377,45 @@ async function loadPosts() {
     allPosts = data.results || [];
     document.getElementById('post-count').textContent = allPosts.length;
     renderPosts(allPosts);
+    // ⑤ コメント数を非同期で取得
+    loadAllCommentCounts();
   } catch (e) {
     document.getElementById('posts-container').innerHTML =
       `<div class="loading">⚠ 読み込みエラー<br><br><small>${e.message}</small></div>`;
   }
 }
 
+// ── ⑤ 全投稿のコメント数をFirestoreから取得 ──
+function loadAllCommentCounts() {
+  if (!window._firebaseReady) {
+    window.addEventListener('firebaseReady', loadAllCommentCounts, { once: true });
+    return;
+  }
+  const db = window._db;
+  // 全commentsをリアルタイムで監視してカード上のカウントを更新
+  window._onSnapshot(
+    window._collection(db, 'comments'),
+    (snapshot) => {
+      commentCounts = {};
+      snapshot.docs.forEach(doc => {
+        const pid = doc.data().postId;
+        if (pid) commentCounts[pid] = (commentCounts[pid] || 0) + 1;
+      });
+      updateCommentCountBadges();
+    }
+  );
+}
+
+function updateCommentCountBadges() {
+  document.querySelectorAll('.comment-count-badge').forEach(el => {
+    const postId = el.dataset.postid;
+    const count = commentCounts[postId] || 0;
+    el.textContent = count > 0 ? `💬 ${count}` : '💬 0';
+    el.classList.toggle('has-comments', count > 0);
+  });
+}
+
+// ── テキスト整形 ──
 function richTextToHtml(richTexts) {
   if (!richTexts || !richTexts.length) return '';
   return richTexts.map(rt => {
@@ -442,17 +427,14 @@ function richTextToHtml(richTexts) {
     } else {
       const color = ann.color;
       if (color && color !== 'default') {
-        const colorClass = color.replace('_background', '');
-        text = `<span class="notion-color-${colorClass}">${text}</span>`;
+        text = `<span class="notion-color-${color.replace('_background','')}">${text}</span>`;
       }
       if (ann.bold) text = `<b>${text}</b>`;
       if (ann.italic) text = `<em>${text}</em>`;
       if (ann.underline) text = `<u>${text}</u>`;
       if (ann.strikethrough) text = `<s>${text}</s>`;
     }
-    if (rt.href) {
-      text = `<a href="${escHtml(rt.href)}" target="_blank" style="color:inherit;opacity:0.8;text-decoration:underline;">${text}</a>`;
-    }
+    if (rt.href) text = `<a href="${escHtml(rt.href)}" target="_blank" style="color:inherit;opacity:0.8;text-decoration:underline;">${text}</a>`;
     return text;
   }).join('');
 }
@@ -468,19 +450,16 @@ function getPostData(post) {
   const notionUrl = post.url || '';
   const dateStr = props.Date?.date?.start || props.日付?.date?.start || '';
   const postDate = dateStr ? new Date(dateStr) : new Date(post.created_time);
-  const now = new Date();
-  const isNew = (now - postDate) / (1000*60*60*24) <= 3;
+  const isNew = (new Date() - postDate) / (1000*60*60*24) <= 3;
   const dateLabel = postDate.toLocaleDateString('ja-JP', { year:'numeric', month:'2-digit', day:'2-digit' }).replace(/\//g,'.');
   const imageUrls = extractImageUrls(props);
   return { title, type, body, bodyHtml, videoUrl, notionUrl, dateLabel, isNew, imageUrls };
 }
 
 function extractImageUrls(props) {
-  const candidates = ['Photo','Photos','Image','Images','Files','ファイル','画像','写真'];
-  for (const key of candidates) {
+  for (const key of ['Photo','Photos','Image','Images','Files','ファイル','画像','写真']) {
     const prop = props[key];
-    if (!prop) continue;
-    if (prop.type === 'files' && prop.files?.length) {
+    if (prop?.type === 'files' && prop.files?.length) {
       return prop.files.map(f => f.file?.url || f.external?.url).filter(Boolean);
     }
   }
@@ -491,9 +470,10 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+// ── カード描画 ──
 function renderPosts(posts) {
   const container = document.getElementById('posts-container');
-  if (posts.length === 0) {
+  if (!posts.length) {
     container.innerHTML = '<div class="loading">投稿がまだありません</div>';
     return;
   }
@@ -505,8 +485,10 @@ function renderPosts(posts) {
       ? `<div class="post-image">
           <img src="${imageUrls[0]}" alt="${escHtml(title)}" loading="lazy" onerror="this.parentElement.style.display='none'">
           ${imageUrls.length > 1 ? `<div class="post-image-count">+${imageUrls.length}</div>` : ''}
-        </div>`
-      : '';
+        </div>` : '';
+    // ⑤ コメント数バッジ
+    const count = commentCounts[post.id] || 0;
+    const countLabel = count > 0 ? `💬 ${count}` : '💬 0';
     return `
       <div class="post-card" data-type="${type}" onclick="openModal(${idx})">
         <div class="post-meta">
@@ -522,7 +504,7 @@ function renderPosts(posts) {
         ${videoBadge}
         ${previewText}
         <div class="post-footer">
-          <span>${dateLabel}</span>
+          <span class="comment-count-badge ${count > 0 ? 'has-comments' : ''}" data-postid="${post.id}">${countLabel}</span>
           <span class="read-more">続きを読む →</span>
         </div>
       </div>`;
@@ -534,15 +516,12 @@ function openModal(idx) {
   const post = allPosts[idx];
   if (!post) return;
   currentPostId = post.id;
-
   const { title, type, body, bodyHtml, videoUrl, notionUrl, dateLabel, isNew, imageUrls } = getPostData(post);
 
   const videoSection = videoUrl ? `
     <a href="${videoUrl}" target="_blank" class="modal-video-link">
       <div class="modal-play-icon">
-        <svg width="13" height="15" viewBox="0 0 12 14" fill="none">
-          <path d="M1 1L11 7L1 13V1Z" fill="#0a00cc"/>
-        </svg>
+        <svg width="13" height="15" viewBox="0 0 12 14" fill="none"><path d="M1 1L11 7L1 13V1Z" fill="#0a00cc"/></svg>
       </div>
       <span>動画を見る</span>
     </a>` : '';
@@ -556,13 +535,12 @@ function openModal(idx) {
   let imagesSection = '';
   if (imageUrls.length) {
     const countClass = imageUrls.length === 1 ? 'count-1' : imageUrls.length === 2 ? 'count-2' : imageUrls.length === 3 ? 'count-3' : 'count-many';
-    const shown = imageUrls.slice(0, 4);
-    const imgItems = shown.map((url, i) =>
-      `<div class="modal-img-wrap" onclick="openLightbox(event, ${idx}, ${i})">
-        <img src="${url}" alt="写真 ${i+1}" loading="lazy" onerror="this.parentElement.style.display='none'">
-      </div>`
-    ).join('');
-    imagesSection = `<div class="modal-images ${countClass}">${imgItems}</div>`;
+    imagesSection = `<div class="modal-images ${countClass}">${
+      imageUrls.slice(0,4).map((url, i) =>
+        `<div class="modal-img-wrap" onclick="openLightbox(event,${idx},${i})">
+          <img src="${url}" alt="写真${i+1}" loading="lazy" onerror="this.parentElement.style.display='none'">
+        </div>`).join('')
+    }</div>`;
   }
 
   document.getElementById('modal-content').innerHTML = `
@@ -585,10 +563,9 @@ function openModal(idx) {
   document.getElementById('modal-overlay').classList.add('open');
   document.getElementById('modal-overlay').scrollTop = 0;
   document.body.style.overflow = 'hidden';
-
-  // コメント欄をリセットしてロード
   document.getElementById('comments-list').innerHTML = '<div class="comments-loading">読み込み中...</div>';
   document.getElementById('comment-msg').value = '';
+  document.getElementById('rate-limit-msg').style.display = 'none';
   loadComments(post.id);
 }
 
@@ -596,16 +573,10 @@ function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
   document.body.style.overflow = '';
   currentPostId = null;
-  // リアルタイムリスナーを解除
-  if (unsubscribeComments) {
-    unsubscribeComments();
-    unsubscribeComments = null;
-  }
+  if (unsubscribeComments) { unsubscribeComments(); unsubscribeComments = null; }
 }
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 // ── コメント読み込み（リアルタイム） ──
 function loadComments(postId) {
@@ -613,52 +584,56 @@ function loadComments(postId) {
     window.addEventListener('firebaseReady', () => loadComments(postId), { once: true });
     return;
   }
+  if (unsubscribeComments) { unsubscribeComments(); unsubscribeComments = null; }
 
-  // 前のリスナーを解除
-  if (unsubscribeComments) {
-    unsubscribeComments();
-    unsubscribeComments = null;
-  }
-
-  const db = window._db;
   const q = window._query(
-    window._collection(db, 'comments'),
+    window._collection(window._db, 'comments'),
     window._where('postId', '==', postId)
   );
 
+  let prevCount = -1;
   unsubscribeComments = window._onSnapshot(q, (snapshot) => {
     const list = document.getElementById('comments-list');
     if (!list) return;
 
     if (snapshot.empty) {
       list.innerHTML = '<div class="comments-empty">まだコメントがありません。最初に書いてみよう！</div>';
+      prevCount = 0;
       return;
     }
 
-    // クライアント側で時系列順にソート
     const docs = snapshot.docs.slice().sort((a, b) => {
       const ta = a.data().createdAt?.toMillis?.() || 0;
       const tb = b.data().createdAt?.toMillis?.() || 0;
       return ta - tb;
     });
 
-    list.innerHTML = docs.map(doc => {
+    const isFirstLoad = prevCount === -1;
+    prevCount = docs.length;
+
+    list.innerHTML = docs.map((doc, i) => {
       const d = doc.data();
       const name = d.name || '匿名';
-      const initials = name.slice(0, 2).toUpperCase();
-      const ts = d.createdAt?.toDate
-        ? formatTs(d.createdAt.toDate())
-        : '—';
+      const initials = name.slice(0,2).toUpperCase();
+      const ts = d.createdAt?.toDate ? formatTs(d.createdAt.toDate()) : '—';
+      // 最後のコメントに is-new クラス（送信直後の演出）
+      const isLatest = !isFirstLoad && i === docs.length - 1;
       return `
-        <div class="comment-item">
+        <div class="comment-item${isLatest ? ' is-new' : ''}" id="comment-${doc.id}">
           <div class="comment-header">
-            <div class="comment-av">${initials}</div>
+            <div class="comment-av">${escHtml(initials)}</div>
             <div class="comment-name">${escHtml(name)}</div>
             <div class="comment-ts">${ts}</div>
           </div>
           <div class="comment-body">${escHtml(d.message)}</div>
         </div>`;
     }).join('');
+
+    // ⑥ 送信後は最新コメントまでスクロール
+    if (!isFirstLoad) {
+      const lastEl = list.lastElementChild;
+      if (lastEl) lastEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   });
 }
 
@@ -667,13 +642,24 @@ function formatTs(date) {
     ' ' + date.toLocaleTimeString('ja-JP', { hour:'2-digit', minute:'2-digit' });
 }
 
-// ── コメント投稿 ──
+// ── ④ コメント投稿（レート制限付き） ──
 async function submitComment() {
   if (!currentPostId) return;
+
+  // レート制限チェック
+  const now = Date.now();
+  const rateLimitEl = document.getElementById('rate-limit-msg');
+  if (now - lastCommentTime < RATE_LIMIT_MS) {
+    const remaining = Math.ceil((RATE_LIMIT_MS - (now - lastCommentTime)) / 1000);
+    rateLimitEl.textContent = `${remaining}秒後に再送信できます`;
+    rateLimitEl.style.display = 'block';
+    return;
+  }
+  rateLimitEl.style.display = 'none';
+
   const name = document.getElementById('comment-name').value.trim() || '匿名';
   const message = document.getElementById('comment-msg').value.trim();
   if (!message) return;
-
   if (!window._firebaseReady) return;
 
   const btn = document.getElementById('comment-submit-btn');
@@ -688,6 +674,7 @@ async function submitComment() {
       createdAt: window._serverTimestamp()
     });
     document.getElementById('comment-msg').value = '';
+    lastCommentTime = Date.now();
   } catch (e) {
     alert('送信に失敗しました。もう一度お試しください。');
     console.error(e);
@@ -699,6 +686,7 @@ async function submitComment() {
 
 window.submitComment = submitComment;
 
+// ── フィルター ──
 function filterPosts(type, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -710,43 +698,24 @@ function filterPosts(type, btn) {
 }
 
 // ── ライトボックス ──
-let lbImages = [];
-let lbIndex = 0;
-
+let lbImages = [], lbIndex = 0;
 function openLightbox(e, postIdx, imgIdx) {
   e.stopPropagation();
-  const post = allPosts[postIdx];
-  if (!post) return;
-  const { imageUrls } = getPostData(post);
-  lbImages = imageUrls;
-  lbIndex = imgIdx;
+  const { imageUrls } = getPostData(allPosts[postIdx]);
+  lbImages = imageUrls; lbIndex = imgIdx;
   updateLightbox();
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-
 function updateLightbox() {
   document.getElementById('lightbox-img').src = lbImages[lbIndex];
-  document.getElementById('lightbox-counter').textContent =
-    lbImages.length > 1 ? `${lbIndex + 1} / ${lbImages.length}` : '';
+  document.getElementById('lightbox-counter').textContent = lbImages.length > 1 ? `${lbIndex+1} / ${lbImages.length}` : '';
   document.querySelector('.lightbox-prev').style.display = lbImages.length > 1 ? '' : 'none';
   document.querySelector('.lightbox-next').style.display = lbImages.length > 1 ? '' : 'none';
 }
-
-function lbNav(dir) {
-  lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
-  updateLightbox();
-}
-
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function closeLightboxOutside(e) {
-  if (e.target === document.getElementById('lightbox')) closeLightbox();
-}
-
+function lbNav(dir) { lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length; updateLightbox(); }
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow = ''; }
+function closeLightboxOutside(e) { if (e.target === document.getElementById('lightbox')) closeLightbox(); }
 document.addEventListener('keydown', e => {
   const lb = document.getElementById('lightbox');
   if (!lb.classList.contains('open')) return;
@@ -755,7 +724,6 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft') lbNav(-1);
 });
 
-// グローバル公開
 window.tryLogin = tryLogin;
 window.filterPosts = filterPosts;
 window.openModal = openModal;
