@@ -383,8 +383,8 @@ const RATE_LIMIT_MS = 30000;
 
 // ── ページ切り替え ──
 function showPage(page) {
-  document.getElementById('posts-page').style.display = page === 'posts' ? '' : 'none';
-  document.getElementById('bbs-page').style.display = page === 'bbs' ? '' : 'none';
+  document.getElementById('posts-page').style.display = page === 'posts' ? 'block' : 'none';
+  document.getElementById('bbs-page').style.display = page === 'bbs' ? 'block' : 'none';
   document.getElementById('nav-posts').classList.toggle('active', page === 'posts');
   document.getElementById('nav-bbs').classList.toggle('active', page === 'bbs');
   if (page === 'bbs') initBbs();
