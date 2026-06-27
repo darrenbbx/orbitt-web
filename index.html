@@ -34,8 +34,11 @@ html, body { min-height: 100vh; background: var(--blue); color: white; font-fami
 
 /* ── ヘッダー ── */
 header { position: sticky; top: 0; z-index: 100; background: rgba(2,0,128,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--white-10); padding: 14px 32px; }
-header .inner { display: flex; align-items: center; justify-content: space-between; }
-.logo { font-family: 'Space Mono', monospace; font-size: 16px; letter-spacing: 4px; }
+header .inner { display: flex; align-items: center; gap: 32px; }
+.logo { font-family: 'Space Mono', monospace; font-size: 16px; letter-spacing: 4px; margin-right: auto; }
+.nav-btn { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 2px; color: var(--white-40); background: none; border: none; cursor: pointer; padding: 6px 0; border-bottom: 2px solid transparent; transition: all 0.2s; }
+.nav-btn:hover { color: white; }
+.nav-btn.active { color: white; border-bottom-color: white; }
 .member-badge { font-size: 11px; background: var(--white-10); border: 1px solid var(--white-20); padding: 4px 12px; border-radius: 20px; color: var(--white-60); font-family: 'Space Mono', monospace; }
 
 /* ── バナー ── */
@@ -53,11 +56,6 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
 .layout { display: flex; gap: 24px; padding: 0 32px 60px; align-items: flex-start; max-width: 960px; margin: 0 auto; }
 .feed { flex: 1; min-width: 0; }
 .sidebar { width: 220px; flex-shrink: 0; position: sticky; top: 80px; }
-
-/* ── フィルター ── */
-.filters { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
-.filter-btn { font-size: 12px; padding: 6px 16px; border-radius: 20px; border: 1px solid var(--white-20); background: transparent; color: var(--white-60); cursor: pointer; font-family: 'Space Mono', monospace; transition: all 0.2s; }
-.filter-btn:hover, .filter-btn.active { background: white; color: var(--blue); border-color: white; }
 
 /* ── 投稿カード ── */
 .post-card { background: rgba(255,255,255,0.05); border: 1px solid var(--white-10); border-radius: 14px; padding: 20px; margin-bottom: 16px; transition: border-color 0.2s, background 0.2s, transform 0.15s; cursor: pointer; user-select: none; }
@@ -155,7 +153,7 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
 .lightbox-next { right: 20px; }
 .lightbox-counter { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 11px; color: rgba(255,255,255,0.5); font-family: 'Space Mono', monospace; letter-spacing: 2px; }
 
-/* ── コメント ── */
+/* ── 投稿コメント ── */
 .comments-section { margin-top: 40px; border-top: 1px solid var(--white-10); padding-top: 32px; }
 .comments-title { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 3px; color: var(--white-40); text-transform: uppercase; margin-bottom: 20px; }
 .comments-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
@@ -182,6 +180,34 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
 .comment-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 .rate-limit-msg { font-size: 11px; color: var(--accent); font-family: 'Space Mono', monospace; display: none; margin-top: 4px; }
 
+/* ── BBS ── */
+#bbs-page { display: none; max-width: 720px; margin: 0 auto; padding: 32px 32px 80px; }
+.bbs-header { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--white-40); text-transform: uppercase; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--white-10); }
+.bbs-form { background: rgba(255,255,255,0.04); border: 1px solid var(--white-10); border-radius: 14px; padding: 20px; margin-bottom: 32px; display: flex; flex-direction: column; gap: 12px; }
+.bbs-form-title { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; color: var(--white-40); margin-bottom: 4px; }
+.bbs-form input, .bbs-form textarea { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid var(--white-20); border-radius: 8px; padding: 10px 14px; color: white; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; outline: none; resize: vertical; }
+.bbs-form input::placeholder, .bbs-form textarea::placeholder { color: var(--white-40); }
+.bbs-form input:focus, .bbs-form textarea:focus { border-color: var(--white-40); }
+.bbs-form textarea { min-height: 80px; }
+.bbs-form-row { display: flex; gap: 10px; align-items: flex-start; }
+.bbs-form-row input { flex: 1; }
+.bbs-submit { background: white; color: var(--blue); border: none; border-radius: 8px; padding: 10px 24px; font-size: 12px; font-family: 'Space Mono', monospace; font-weight: 700; cursor: pointer; letter-spacing: 1px; transition: background 0.2s; white-space: nowrap; flex-shrink: 0; }
+.bbs-submit:hover { background: #ddd; }
+.bbs-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+.bbs-rate-limit { font-size: 11px; color: var(--accent); font-family: 'Space Mono', monospace; display: none; }
+.bbs-list { display: flex; flex-direction: column; gap: 0; }
+.bbs-item { border-bottom: 1px solid var(--white-10); padding: 20px 0; }
+.bbs-item:first-child { border-top: 1px solid var(--white-10); }
+.bbs-item.is-new { animation: fadeIn 0.4s ease; }
+.bbs-num { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--white-40); margin-bottom: 6px; }
+.bbs-item-title { font-size: 15px; font-weight: 500; margin-bottom: 8px; }
+.bbs-meta { display: flex; gap: 16px; margin-bottom: 10px; }
+.bbs-meta-item { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--white-40); }
+.bbs-meta-item span { color: var(--white-60); margin-left: 6px; }
+.bbs-msg { font-size: 13px; color: var(--white-60); line-height: 1.7; white-space: pre-line; }
+.bbs-empty { font-size: 12px; color: var(--white-40); font-family: 'Space Mono', monospace; padding: 40px 0; text-align: center; letter-spacing: 1px; }
+.bbs-loading { font-size: 12px; color: var(--white-40); font-family: 'Space Mono', monospace; padding: 40px 0; text-align: center; letter-spacing: 2px; }
+
 @media (max-width: 680px) {
   .layout { flex-direction: column; padding: 0 16px 40px; }
   .sidebar { width: 100%; position: static; }
@@ -190,6 +216,7 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
   .modal { padding: 32px 20px 60px; }
   .modal-title { font-size: 20px; }
   .modal-topbar { padding: 10px 16px; }
+  #bbs-page { padding: 24px 16px 60px; }
 }
 </style>
 </head>
@@ -209,42 +236,60 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
   <header>
     <div class="inner">
       <div class="logo">ORBITT</div>
+      <button class="nav-btn active" id="nav-posts" onclick="showPage('posts')">POSTS</button>
+      <button class="nav-btn" id="nav-bbs" onclick="showPage('bbs')">BBS</button>
       <div class="member-badge">MEMBER</div>
     </div>
   </header>
-  <div class="banner">
-    <div class="banner-text">EXCLUSIVE MEMBERS CONTENT</div>
-  </div>
-  <div class="profile-row">
-    <div class="avatar">R</div>
-    <div>
-      <div class="profile-name">Riku Matsushima</div>
-      <div class="profile-sub">限定コンテンツ</div>
+
+  <!-- POSTS PAGE -->
+  <div id="posts-page">
+    <div class="banner">
+      <div class="banner-text">EXCLUSIVE MEMBERS CONTENT</div>
     </div>
-  </div>
-  <div class="layout">
-    <div class="feed">
-      <div class="filters">
-        <button class="filter-btn active" onclick="filterPosts('all', this)">All</button>
-        <button class="filter-btn" onclick="filterPosts('動画', this)">動画</button>
-        <button class="filter-btn" onclick="filterPosts('テキスト', this)">テキスト</button>
-        <button class="filter-btn" onclick="filterPosts('写真', this)">写真</button>
-      </div>
-      <div id="posts-container">
-        <div class="loading"><div class="spinner"></div>LOADING...</div>
+    <div class="profile-row">
+      <div class="avatar">R</div>
+      <div>
+        <div class="profile-name">Riku Matsushima</div>
+        <div class="profile-sub">限定コンテンツ</div>
       </div>
     </div>
-    <div class="sidebar">
-      <div class="sb-card">
-        <div class="sb-label">プラン</div>
-        <div class="sb-plan"><div class="plan-dot"></div><span>Premium</span></div>
+    <div class="layout">
+      <div class="feed">
+        <div id="posts-container">
+          <div class="loading"><div class="spinner"></div>LOADING...</div>
+        </div>
       </div>
-      <div class="sb-card">
-        <div class="sb-label">投稿数</div>
-        <div class="sb-stat" id="post-count">—</div>
-        <div class="sb-stat-sub">件のコンテンツ</div>
-        <a href="https://notion.so" target="_blank" class="notion-link">▸ Notion で管理</a>
+      <div class="sidebar">
+        <div class="sb-card">
+          <div class="sb-label">プラン</div>
+          <div class="sb-plan"><div class="plan-dot"></div><span>Premium</span></div>
+        </div>
+        <div class="sb-card">
+          <div class="sb-label">投稿数</div>
+          <div class="sb-stat" id="post-count">—</div>
+          <div class="sb-stat-sub">件のコンテンツ</div>
+          <a href="https://notion.so" target="_blank" class="notion-link">▸ Notion で管理</a>
+        </div>
       </div>
+    </div>
+  </div>
+
+  <!-- BBS PAGE -->
+  <div id="bbs-page">
+    <div class="bbs-header">BULLETIN BOARD — 掲示板</div>
+    <div class="bbs-form">
+      <div class="bbs-form-title">NEW MESSAGE</div>
+      <input type="text" id="bbs-title-input" placeholder="タイトル（任意）" maxlength="60" />
+      <div class="bbs-form-row">
+        <input type="text" id="bbs-name-input" placeholder="ハンドルネーム（任意）" maxlength="30" />
+        <button class="bbs-submit" id="bbs-submit-btn" onclick="submitBbs()">POST</button>
+      </div>
+      <textarea id="bbs-msg-input" placeholder="メッセージを書く..." maxlength="1000"></textarea>
+      <div class="bbs-rate-limit" id="bbs-rate-limit"></div>
+    </div>
+    <div class="bbs-list" id="bbs-list">
+      <div class="bbs-loading">LOADING...</div>
     </div>
   </div>
 </div>
@@ -286,7 +331,7 @@ header .inner { display: flex; align-items: center; justify-content: space-betwe
 <!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBW0fUMMA1k6lQ2gfadFTUZ6dfgf4bZ8bM",
@@ -306,6 +351,7 @@ window._collection = collection;
 window._addDoc = addDoc;
 window._query = query;
 window._where = where;
+window._orderBy = orderBy;
 window._onSnapshot = onSnapshot;
 window._serverTimestamp = serverTimestamp;
 window._firebaseReady = true;
@@ -317,11 +363,21 @@ window.dispatchEvent(new Event('firebaseReady'));
 let allPosts = [];
 let currentPostId = null;
 let unsubscribeComments = null;
-let commentCounts = {}; // postId => count
+let commentCounts = {};
 let lastCommentTime = 0;
+let lastBbsTime = 0;
 const RATE_LIMIT_MS = 30000;
 
-// ── ③ sessionStorageでログイン維持 ──
+// ── ページ切り替え ──
+function showPage(page) {
+  document.getElementById('posts-page').style.display = page === 'posts' ? '' : 'none';
+  document.getElementById('bbs-page').style.display = page === 'bbs' ? '' : 'none';
+  document.getElementById('nav-posts').classList.toggle('active', page === 'posts');
+  document.getElementById('nav-bbs').classList.toggle('active', page === 'bbs');
+  if (page === 'bbs') initBbs();
+}
+
+// ── ログイン維持 ──
 function isLoggedIn() {
   return sessionStorage.getItem('orbitt_auth') === 'ok';
 }
@@ -332,7 +388,7 @@ if (isLoggedIn()) {
   loadPosts();
 }
 
-// ── ① パスワード認証（サーバーサイド） ──
+// ── パスワード認証 ──
 async function tryLogin() {
   const val = document.getElementById('pw-input').value;
   if (!val) return;
@@ -371,13 +427,12 @@ document.getElementById('pw-input').addEventListener('keydown', e => {
 // ── 投稿読み込み ──
 async function loadPosts() {
   try {
-  const res = await fetch('https://script.google.com/macros/s/AKfycbzHVZdRNV8OG3dZsI7fj28DkvsOiKPC9qseyvEMRDsbW40d-tvTXIwGsCWSbFgO88U9/exec');
+    const res = await fetch('https://script.google.com/macros/s/AKfycbzHVZdRNV8OG3dZsI7fj28DkvsOiKPC9qseyvEMRDsbW40d-tvTXIwGsCWSbFgO88U9/exec');
     if (!res.ok) throw new Error('API error');
     const data = await res.json();
     allPosts = data.results || [];
     document.getElementById('post-count').textContent = allPosts.length;
     renderPosts(allPosts);
-    // ⑤ コメント数を非同期で取得
     loadAllCommentCounts();
   } catch (e) {
     document.getElementById('posts-container').innerHTML =
@@ -385,16 +440,14 @@ async function loadPosts() {
   }
 }
 
-// ── ⑤ 全投稿のコメント数をFirestoreから取得 ──
+// ── コメント数 ──
 function loadAllCommentCounts() {
   if (!window._firebaseReady) {
     window.addEventListener('firebaseReady', loadAllCommentCounts, { once: true });
     return;
   }
-  const db = window._db;
-  // 全commentsをリアルタイムで監視してカード上のカウントを更新
   window._onSnapshot(
-    window._collection(db, 'comments'),
+    window._collection(window._db, 'comments'),
     (snapshot) => {
       commentCounts = {};
       snapshot.docs.forEach(doc => {
@@ -486,7 +539,6 @@ function renderPosts(posts) {
           <img src="${imageUrls[0]}" alt="${escHtml(title)}" loading="lazy" onerror="this.parentElement.style.display='none'">
           ${imageUrls.length > 1 ? `<div class="post-image-count">+${imageUrls.length}</div>` : ''}
         </div>` : '';
-    // ⑤ コメント数バッジ
     const count = commentCounts[post.id] || 0;
     const countLabel = count > 0 ? `💬 ${count}` : '💬 0';
     return `
@@ -578,7 +630,7 @@ function closeModal() {
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-// ── コメント読み込み（リアルタイム） ──
+// ── コメント読み込み ──
 function loadComments(postId) {
   if (!window._firebaseReady) {
     window.addEventListener('firebaseReady', () => loadComments(postId), { once: true });
@@ -616,10 +668,9 @@ function loadComments(postId) {
       const name = d.name || '匿名';
       const initials = name.slice(0,2).toUpperCase();
       const ts = d.createdAt?.toDate ? formatTs(d.createdAt.toDate()) : '—';
-      // 最後のコメントに is-new クラス（送信直後の演出）
       const isLatest = !isFirstLoad && i === docs.length - 1;
       return `
-        <div class="comment-item${isLatest ? ' is-new' : ''}" id="comment-${doc.id}">
+        <div class="comment-item${isLatest ? ' is-new' : ''}">
           <div class="comment-header">
             <div class="comment-av">${escHtml(initials)}</div>
             <div class="comment-name">${escHtml(name)}</div>
@@ -629,7 +680,6 @@ function loadComments(postId) {
         </div>`;
     }).join('');
 
-    // ⑥ 送信後は最新コメントまでスクロール
     if (!isFirstLoad) {
       const lastEl = list.lastElementChild;
       if (lastEl) lastEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -642,11 +692,9 @@ function formatTs(date) {
     ' ' + date.toLocaleTimeString('ja-JP', { hour:'2-digit', minute:'2-digit' });
 }
 
-// ── ④ コメント投稿（レート制限付き） ──
+// ── コメント投稿 ──
 async function submitComment() {
   if (!currentPostId) return;
-
-  // レート制限チェック
   const now = Date.now();
   const rateLimitEl = document.getElementById('rate-limit-msg');
   if (now - lastCommentTime < RATE_LIMIT_MS) {
@@ -677,24 +725,110 @@ async function submitComment() {
     lastCommentTime = Date.now();
   } catch (e) {
     alert('送信に失敗しました。もう一度お試しください。');
-    console.error(e);
   } finally {
     btn.disabled = false;
     btn.textContent = '送信';
   }
 }
 
-window.submitComment = submitComment;
+// ── BBS ──
+let bbsUnsubscribe = null;
+let bbsInitialized = false;
 
-// ── フィルター ──
-function filterPosts(type, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const filtered = type === 'all' ? allPosts : allPosts.filter(p => {
-    const t = p.properties.Type?.select?.name || p.properties.種類?.select?.name || '';
-    return t === type;
+function initBbs() {
+  if (bbsInitialized) return;
+  bbsInitialized = true;
+  if (!window._firebaseReady) {
+    window.addEventListener('firebaseReady', loadBbs, { once: true });
+    return;
+  }
+  loadBbs();
+}
+
+function loadBbs() {
+  const q = window._query(
+    window._collection(window._db, 'bbs'),
+    window._orderBy('createdAt', 'desc')
+  );
+
+  let prevCount = -1;
+  bbsUnsubscribe = window._onSnapshot(q, (snapshot) => {
+    const list = document.getElementById('bbs-list');
+    if (!list) return;
+
+    if (snapshot.empty) {
+      list.innerHTML = '<div class="bbs-empty">まだ書き込みがありません。最初のメッセージを書いてみよう！</div>';
+      prevCount = 0;
+      return;
+    }
+
+    const isFirstLoad = prevCount === -1;
+    prevCount = snapshot.docs.length;
+
+    // 番号は新しい順なので全体数から計算
+    const total = snapshot.docs.length;
+    list.innerHTML = snapshot.docs.map((doc, i) => {
+      const d = doc.data();
+      const num = total - i;
+      const name = d.name || '匿名';
+      const ts = d.createdAt?.toDate ? formatTsBbs(d.createdAt.toDate()) : '—';
+      const isLatest = !isFirstLoad && i === 0;
+      return `
+        <div class="bbs-item${isLatest ? ' is-new' : ''}">
+          <div class="bbs-num">#${num}</div>
+          ${d.title ? `<div class="bbs-item-title">${escHtml(d.title)}</div>` : ''}
+          <div class="bbs-meta">
+            <div class="bbs-meta-item">HANDLE:<span>${escHtml(name)}</span></div>
+            <div class="bbs-meta-item">DATE:<span>${ts}</span></div>
+          </div>
+          <div class="bbs-msg">${escHtml(d.message)}</div>
+        </div>`;
+    }).join('');
   });
-  renderPosts(filtered);
+}
+
+function formatTsBbs(date) {
+  return date.toLocaleDateString('ja-JP', { year:'numeric', month:'long', day:'numeric' }) +
+    '　' + date.toLocaleTimeString('ja-JP', { hour:'2-digit', minute:'2-digit' });
+}
+
+async function submitBbs() {
+  const now = Date.now();
+  const rateLimitEl = document.getElementById('bbs-rate-limit');
+  if (now - lastBbsTime < RATE_LIMIT_MS) {
+    const remaining = Math.ceil((RATE_LIMIT_MS - (now - lastBbsTime)) / 1000);
+    rateLimitEl.textContent = `${remaining}秒後に再投稿できます`;
+    rateLimitEl.style.display = 'block';
+    return;
+  }
+  rateLimitEl.style.display = 'none';
+
+  const title = document.getElementById('bbs-title-input').value.trim();
+  const name = document.getElementById('bbs-name-input').value.trim() || '匿名';
+  const message = document.getElementById('bbs-msg-input').value.trim();
+  if (!message) return;
+  if (!window._firebaseReady) return;
+
+  const btn = document.getElementById('bbs-submit-btn');
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  try {
+    await window._addDoc(window._collection(window._db, 'bbs'), {
+      title,
+      name,
+      message,
+      createdAt: window._serverTimestamp()
+    });
+    document.getElementById('bbs-title-input').value = '';
+    document.getElementById('bbs-msg-input').value = '';
+    lastBbsTime = Date.now();
+  } catch (e) {
+    alert('送信に失敗しました。もう一度お試しください。');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'POST';
+  }
 }
 
 // ── ライトボックス ──
@@ -725,9 +859,11 @@ document.addEventListener('keydown', e => {
 });
 
 window.tryLogin = tryLogin;
-window.filterPosts = filterPosts;
+window.showPage = showPage;
 window.openModal = openModal;
 window.closeModal = closeModal;
+window.submitComment = submitComment;
+window.submitBbs = submitBbs;
 window.openLightbox = openLightbox;
 window.closeLightbox = closeLightbox;
 window.closeLightboxOutside = closeLightboxOutside;
