@@ -181,32 +181,41 @@ header .inner { display: flex; align-items: center; gap: 32px; }
 .rate-limit-msg { font-size: 11px; color: var(--accent); font-family: 'Space Mono', monospace; display: none; margin-top: 4px; }
 
 /* ── BBS ── */
-#bbs-page { display: none; max-width: 720px; margin: 0 auto; padding: 32px 32px 80px; }
-.bbs-header { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--white-40); text-transform: uppercase; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--white-10); }
-.bbs-form { background: rgba(255,255,255,0.04); border: 1px solid var(--white-10); border-radius: 14px; padding: 20px; margin-bottom: 32px; display: flex; flex-direction: column; gap: 12px; }
-.bbs-form-title { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; color: var(--white-40); margin-bottom: 4px; }
-.bbs-form input, .bbs-form textarea { width: 100%; background: rgba(255,255,255,0.07); border: 1px solid var(--white-20); border-radius: 8px; padding: 10px 14px; color: white; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; outline: none; resize: vertical; }
+#bbs-page { display: none; max-width: 720px; margin: 0 auto; padding: 40px 32px 80px; }
+.bbs-header { margin-bottom: 28px; }
+.bbs-header-title { font-family: 'Space Mono', monospace; font-size: 18px; letter-spacing: 4px; font-weight: 700; margin-bottom: 6px; }
+.bbs-header-sub { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--white-40); }
+
+/* フォーム */
+.bbs-form { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18); border-radius: 16px; padding: 24px; margin-bottom: 40px; display: flex; flex-direction: column; gap: 14px; }
+.bbs-form-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--white-40); text-transform: uppercase; margin-bottom: -4px; }
+.bbs-form input, .bbs-form textarea { width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; padding: 12px 16px; color: white; font-size: 14px; font-family: 'Noto Sans JP', sans-serif; outline: none; resize: vertical; transition: border-color 0.2s; }
 .bbs-form input::placeholder, .bbs-form textarea::placeholder { color: var(--white-40); }
-.bbs-form input:focus, .bbs-form textarea:focus { border-color: var(--white-40); }
-.bbs-form textarea { min-height: 80px; }
-.bbs-form-row { display: flex; gap: 10px; align-items: flex-start; }
-.bbs-form-row input { flex: 1; }
-.bbs-submit { background: white; color: var(--blue); border: none; border-radius: 8px; padding: 10px 24px; font-size: 12px; font-family: 'Space Mono', monospace; font-weight: 700; cursor: pointer; letter-spacing: 1px; transition: background 0.2s; white-space: nowrap; flex-shrink: 0; }
-.bbs-submit:hover { background: #ddd; }
-.bbs-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-.bbs-rate-limit { font-size: 11px; color: var(--accent); font-family: 'Space Mono', monospace; display: none; }
+.bbs-form input:focus, .bbs-form textarea:focus { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.1); }
+.bbs-form textarea { min-height: 100px; }
+.bbs-form-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.bbs-form-bottom input { flex: 1; min-width: 160px; }
+.bbs-submit { background: white; color: var(--blue); border: none; border-radius: 10px; padding: 12px 28px; font-size: 13px; font-family: 'Space Mono', monospace; font-weight: 700; cursor: pointer; letter-spacing: 2px; transition: background 0.2s, transform 0.1s; white-space: nowrap; }
+.bbs-submit:hover { background: #eee; transform: translateY(-1px); }
+.bbs-submit:active { transform: translateY(0); }
+.bbs-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.bbs-rate-limit { font-size: 11px; color: var(--accent); font-family: 'Space Mono', monospace; display: none; width: 100%; }
+
+/* 投稿リスト */
+.bbs-section-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--white-40); margin-bottom: 16px; text-transform: uppercase; }
 .bbs-list { display: flex; flex-direction: column; gap: 0; }
-.bbs-item { border-bottom: 1px solid var(--white-10); padding: 20px 0; }
+.bbs-item { border-bottom: 1px solid var(--white-10); padding: 20px 4px; }
 .bbs-item:first-child { border-top: 1px solid var(--white-10); }
-.bbs-item.is-new { animation: fadeIn 0.4s ease; }
-.bbs-num { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--white-40); margin-bottom: 6px; }
-.bbs-item-title { font-size: 15px; font-weight: 500; margin-bottom: 8px; }
-.bbs-meta { display: flex; gap: 16px; margin-bottom: 10px; }
+.bbs-item.is-new { animation: fadeIn 0.4s ease; background: rgba(255,255,255,0.03); border-radius: 8px; }
+.bbs-item-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+.bbs-num { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--white-40); flex-shrink: 0; }
+.bbs-item-title { font-size: 15px; font-weight: 500; flex: 1; }
+.bbs-meta { display: flex; gap: 16px; margin-bottom: 10px; flex-wrap: wrap; }
 .bbs-meta-item { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--white-40); }
-.bbs-meta-item span { color: var(--white-60); margin-left: 6px; }
-.bbs-msg { font-size: 13px; color: var(--white-60); line-height: 1.7; white-space: pre-line; }
-.bbs-empty { font-size: 12px; color: var(--white-40); font-family: 'Space Mono', monospace; padding: 40px 0; text-align: center; letter-spacing: 1px; }
-.bbs-loading { font-size: 12px; color: var(--white-40); font-family: 'Space Mono', monospace; padding: 40px 0; text-align: center; letter-spacing: 2px; }
+.bbs-meta-item span { color: rgba(255,255,255,0.7); margin-left: 4px; }
+.bbs-msg { font-size: 14px; color: var(--white-60); line-height: 1.8; white-space: pre-line; }
+.bbs-empty { font-size: 12px; color: var(--white-40); font-family: 'Space Mono', monospace; padding: 60px 0; text-align: center; letter-spacing: 1px; }
+.bbs-loading { font-size: 12px; color: var(--white-40); font-family: 'Space Mono', monospace; padding: 60px 0; text-align: center; letter-spacing: 2px; }
 
 @media (max-width: 680px) {
   .layout { flex-direction: column; padding: 0 16px 40px; }
@@ -277,17 +286,21 @@ header .inner { display: flex; align-items: center; gap: 32px; }
 
   <!-- BBS PAGE -->
   <div id="bbs-page">
-    <div class="bbs-header">BULLETIN BOARD — 掲示板</div>
+    <div class="bbs-header">
+      <div class="bbs-header-title">BBS</div>
+      <div class="bbs-header-sub">BULLETIN BOARD — 掲示板</div>
+    </div>
     <div class="bbs-form">
-      <div class="bbs-form-title">NEW MESSAGE</div>
+      <div class="bbs-form-label">New Message</div>
       <input type="text" id="bbs-title-input" placeholder="タイトル（任意）" maxlength="60" />
-      <div class="bbs-form-row">
+      <textarea id="bbs-msg-input" placeholder="メッセージを書く..." maxlength="1000"></textarea>
+      <div class="bbs-form-bottom">
         <input type="text" id="bbs-name-input" placeholder="ハンドルネーム（任意）" maxlength="30" />
         <button class="bbs-submit" id="bbs-submit-btn" onclick="submitBbs()">POST</button>
       </div>
-      <textarea id="bbs-msg-input" placeholder="メッセージを書く..." maxlength="1000"></textarea>
       <div class="bbs-rate-limit" id="bbs-rate-limit"></div>
     </div>
+    <div class="bbs-section-label">Recent Messages</div>
     <div class="bbs-list" id="bbs-list">
       <div class="bbs-loading">LOADING...</div>
     </div>
@@ -775,8 +788,10 @@ function loadBbs() {
       const isLatest = !isFirstLoad && i === 0;
       return `
         <div class="bbs-item${isLatest ? ' is-new' : ''}">
-          <div class="bbs-num">#${num}</div>
-          ${d.title ? `<div class="bbs-item-title">${escHtml(d.title)}</div>` : ''}
+          <div class="bbs-item-header">
+            <div class="bbs-num">#${num}</div>
+            ${d.title ? `<div class="bbs-item-title">${escHtml(d.title)}</div>` : ''}
+          </div>
           <div class="bbs-meta">
             <div class="bbs-meta-item">HANDLE:<span>${escHtml(name)}</span></div>
             <div class="bbs-meta-item">DATE:<span>${ts}</span></div>
