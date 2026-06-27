@@ -189,9 +189,9 @@ header .inner { display: flex; align-items: center; gap: 32px; }
 /* フォーム */
 .bbs-form { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18); border-radius: 16px; padding: 24px; margin-bottom: 40px; display: flex; flex-direction: column; gap: 14px; }
 .bbs-form-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--white-40); text-transform: uppercase; margin-bottom: -4px; }
-.bbs-form input, .bbs-form textarea { width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; padding: 12px 16px; color: white; font-size: 14px; font-family: 'Noto Sans JP', sans-serif; outline: none; resize: vertical; transition: border-color 0.2s; }
-.bbs-form input::placeholder, .bbs-form textarea::placeholder { color: var(--white-40); }
-.bbs-form input:focus, .bbs-form textarea:focus { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.1); }
+.bbs-form input[type="text"], .bbs-form textarea { width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; padding: 12px 16px; color: white; font-size: 14px; font-family: 'Noto Sans JP', sans-serif; outline: none; resize: vertical; transition: border-color 0.2s; }
+.bbs-form input[type="text"]::placeholder, .bbs-form textarea::placeholder { color: var(--white-40); }
+.bbs-form input[type="text"]:focus, .bbs-form textarea:focus { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.1); }
 .bbs-form textarea { min-height: 100px; }
 .bbs-form-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .bbs-form-bottom input { flex: 1; min-width: 160px; }
