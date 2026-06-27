@@ -809,7 +809,7 @@ async function submitBbs() {
   }
   rateLimitEl.style.display = 'none';
 
-  const title = document.getElementById('bbs-title-input').value.trim();
+  const title = '';
   const name = document.getElementById('bbs-name-input').value.trim() || '匿名';
   const message = document.getElementById('bbs-msg-input').value.trim();
   if (!message) return;
@@ -826,7 +826,6 @@ async function submitBbs() {
       message,
       createdAt: window._serverTimestamp()
     });
-    document.getElementById('bbs-title-input').value = '';
     document.getElementById('bbs-msg-input').value = '';
     lastBbsTime = Date.now();
   } catch (e) {
